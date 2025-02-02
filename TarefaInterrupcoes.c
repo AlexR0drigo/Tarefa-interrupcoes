@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "pico/stdlib.h"
@@ -10,8 +8,6 @@
 #define IS_RGBW false
 #define NUM_PIXELS 25
 #define matrixRGB_PIN 7
-#define tempo 400
-
 
 #define LEDR_PIN 13
 #define LEDB_PIN 12
@@ -24,12 +20,12 @@ static volatile int numb = 0;  // variavel global que define o número exibido n
 static volatile uint32_t last_time = 0;
 static volatile bool update_led_matrix = false; // variavel de atualização da matriz
 
-// Variável global para armazenar a cor (Entre 0 e 255 para intensidade)
+// varialvel que armazena a cor e intensidade
 uint8_t led_r = 1; // Intensidade do vermelho
 uint8_t led_g = 1; // Intensidade do verde
 uint8_t led_b = 1; // Intensidade do azul
 
-// Buffer para armazenar quais LEDs estão ligados matriz 5x5
+// Matriz para armazenar quais LEDs serão ligados
 bool matrixLED[10][NUM_PIXELS] = {
     {// 0
     0, 1, 1, 1, 0, 
@@ -139,14 +135,16 @@ int main()
     gpio_init(LEDR_PIN);              
     gpio_set_dir(LEDR_PIN, GPIO_OUT);
 
+    //Inicialização dos dosi botões
     gpio_init(button_0);
     gpio_set_dir(button_0, GPIO_IN); 
-    gpio_pull_up(button_0);          
+    gpio_pull_up(button_0);   
+
     gpio_init(button_1);
     gpio_set_dir(button_1, GPIO_IN); 
     gpio_pull_up(button_1);          
 
-    // Configuração da interrupção com callback
+    // Configuração da interrupção com callback para ambos os botões 
     gpio_set_irq_enabled_with_callback(button_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
     gpio_set_irq_enabled_with_callback(button_1, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
 
@@ -181,7 +179,7 @@ void gpio_irq_handler(uint gpio, uint32_t events)
     // Verifica se passou tempo suficiente desde o último evento (debouncing)
     if (current_time - last_time > 200000) // 200ms de debouncing
     {
-        last_time = current_time; // Atualiza o tempo do último evento
+        last_time = current_time; // atualiza o tempo
         
         if (gpio == button_0) {
 
