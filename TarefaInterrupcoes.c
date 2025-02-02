@@ -135,7 +135,7 @@ int main()
     gpio_init(LEDR_PIN);              
     gpio_set_dir(LEDR_PIN, GPIO_OUT);
 
-    //Inicialização dos dosi botões
+    //Inicialização dos dois botões
     gpio_init(button_0);
     gpio_set_dir(button_0, GPIO_IN); 
     gpio_pull_up(button_0);   
