@@ -22,11 +22,12 @@
 
 static volatile int numb = 0;  // variavel global que define o número exibido na matriz
 static volatile uint32_t last_time = 0;
+static volatile bool update_led_matrix = false; // variavel de atualização da matriz
 
 // Variável global para armazenar a cor (Entre 0 e 255 para intensidade)
-uint8_t led_r = 0; // Intensidade do vermelho
-uint8_t led_g = 0; // Intensidade do verde
-uint8_t led_b =200; // Intensidade do azul
+uint8_t led_r = 1; // Intensidade do vermelho
+uint8_t led_g = 1; // Intensidade do verde
+uint8_t led_b = 1; // Intensidade do azul
 
 // Buffer para armazenar quais LEDs estão ligados matriz 5x5
 bool matrixLED[10][NUM_PIXELS] = {
@@ -139,8 +140,8 @@ int main()
     gpio_set_dir(LEDR_PIN, GPIO_OUT);
 
     gpio_init(button_0);
-    gpio_set_dir(button_0, GPIO_IN); // Configura o pino como entrada
-    gpio_pull_up(button_0);          // Habilita o pull-up interno
+    gpio_set_dir(button_0, GPIO_IN); 
+    gpio_pull_up(button_0);          
     gpio_init(button_1);
     gpio_set_dir(button_1, GPIO_IN); 
     gpio_pull_up(button_1);          
@@ -150,6 +151,7 @@ int main()
     gpio_set_irq_enabled_with_callback(button_1, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
 
     set_one_led(led_r, led_g, led_b);
+
     while (true)
     {
         
@@ -157,6 +159,13 @@ int main()
         sleep_ms(150);         // Mantém aceso por 150 ms
         gpio_put(LEDR_PIN, 0);  // Apaga o LED
         sleep_ms(50);          // Mantém apagado por 50 ms
+
+        if (update_led_matrix)
+        {
+            set_one_led(led_r, led_g, led_b);
+            update_led_matrix = false;  // Resetar a flag após a atualização
+        }
+    
         
         
     }
@@ -180,9 +189,9 @@ void gpio_irq_handler(uint gpio, uint32_t events)
             //sleep_ms(500);
             if (numb < 9) {
                 numb++;
-                printf("A = %d\n", numb);
+                
             }
-            set_one_led(led_r, led_g, led_b);
+            update_led_matrix = true;// é colocada como true para a atualização da matriz de leds ocorrer
         } else if (gpio == button_1) {
 
             set_one_led(0, 0, 0);
@@ -190,7 +199,7 @@ void gpio_irq_handler(uint gpio, uint32_t events)
             if (numb > 0) {
                 numb--;
             }
-            set_one_led(led_r, led_g, led_b);
+            update_led_matrix = true;
         }
     }
 }
