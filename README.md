@@ -33,6 +33,6 @@ Passo 5: No mesmo menu da extensão Raspberry Pi Pico selecione a opção "Run P
 
 ## Link para o video 
 
-[DRIVE] (https://drive.google.com/drive/folders/1cOvivlfGcfRL578HgfG3-990rDUF1gCL?usp=drive_link)
+[DRIVE] https://drive.google.com/drive/folders/1cOvivlfGcfRL578HgfG3-990rDUF1gCL?usp=drive_link
 
 ## Projeto e video por Alex Rodrigo 
